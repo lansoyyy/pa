@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pa/screens/pages/upload_pet_page.dart';
 import 'package:pa/widgets/text_widget.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -16,13 +17,44 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: () {},
+          PopupMenuButton(
             icon: const Icon(
               Icons.menu,
               color: Colors.white,
             ),
-          ),
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const UploadPetPage()));
+                  },
+                  child: TextWidget(
+                    text: 'Upload pet',
+                    fontSize: 16,
+                  ),
+                ),
+                PopupMenuItem(
+                  child: TextWidget(
+                    text: 'Inquiries',
+                    fontSize: 16,
+                  ),
+                ),
+                PopupMenuItem(
+                  child: TextWidget(
+                    text: 'Status',
+                    fontSize: 16,
+                  ),
+                ),
+                PopupMenuItem(
+                  child: TextWidget(
+                    text: 'Logout',
+                    fontSize: 16,
+                  ),
+                ),
+              ];
+            },
+          )
         ],
       ),
       body: Center(
