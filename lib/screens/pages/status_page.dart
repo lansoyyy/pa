@@ -84,7 +84,7 @@ class _StatusPageState extends State<StatusPage> {
                               fontSize: 18,
                             ),
                             const SizedBox(
-                              width: 20,
+                              width: 10,
                             ),
                             CircleAvatar(
                               maxRadius: 25,
@@ -93,7 +93,12 @@ class _StatusPageState extends State<StatusPage> {
                                   NetworkImage(data.docs[i]['img']),
                             ),
                             const SizedBox(
-                              width: 100,
+                              width: 10,
+                            ),
+                            TextWidget(
+                                text: data.docs[i]['name'], fontSize: 14),
+                            const SizedBox(
+                              width: 70,
                             ),
                             ButtonWidget(
                               color: Colors.green,

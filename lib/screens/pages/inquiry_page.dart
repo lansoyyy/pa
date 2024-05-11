@@ -98,6 +98,11 @@ class _InquiryPageState extends State<InquiryPage> {
                               backgroundImage:
                                   NetworkImage(data.docs[i]['img']),
                             ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            TextWidget(
+                                text: data.docs[i]['name'], fontSize: 14),
                             const Expanded(
                               child: SizedBox(
                                 width: 10,
