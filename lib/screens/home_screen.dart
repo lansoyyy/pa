@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pa/screens/auth/login_page.dart';
 import 'package:pa/screens/pages/inquiry_page.dart';
@@ -125,52 +126,173 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2),
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      Container(
-                        height: 100,
-                        width: 175,
-                        color: Colors.grey,
-                      ),
-                      Container(
-                        height: 75,
-                        width: 175,
-                        color: Colors.blue[200],
-                        child: Padding(
-                          padding: const EdgeInsets.all(3.0),
+            StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('Pets')
+                    .where('type', isEqualTo: 'Pending')
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    print(snapshot.error);
+                    return const Center(child: Text('Error'));
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Padding(
+                      padding: EdgeInsets.only(top: 50),
+                      child: Center(
+                          child: CircularProgressIndicator(
+                        color: Colors.black,
+                      )),
+                    );
+                  }
+
+                  final data = snapshot.requireData;
+                  return Expanded(
+                    child: GridView.builder(
+                      itemCount: data.docs.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2),
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        height: 100,
+                                        width: 175,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: NetworkImage(
+                                              data.docs[index]['img'],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 75,
+                                        width: 175,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(3.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              TextWidget(
+                                                text:
+                                                    'Owner: ${data.docs[index]['name']}',
+                                                fontSize: 14,
+                                              ),
+                                              TextWidget(
+                                                text:
+                                                    'Location: ${data.docs[index]['location']}',
+                                                fontSize: 12,
+                                              ),
+                                              TextWidget(
+                                                align: TextAlign.start,
+                                                maxLines: 2,
+                                                text:
+                                                    '${data.docs[index]['desc']}',
+                                                fontSize: 12,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  actions: <Widget>[
+                                    MaterialButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(true),
+                                      child: const Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                            fontFamily: 'QRegular',
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    MaterialButton(
+                                      onPressed: () async {
+                                        await FirebaseFirestore.instance
+                                            .collection('Pets')
+                                            .doc(data.docs[index].id)
+                                            .update({'type': 'Inquired'});
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text(
+                                        'Inquire',
+                                        style: TextStyle(
+                                            fontFamily: 'QRegular',
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              TextWidget(
-                                text: 'Owner: Jane Villarico',
-                                fontSize: 13,
+                              Container(
+                                height: 100,
+                                width: 175,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                      data.docs[index]['img'],
+                                    ),
+                                  ),
+                                ),
                               ),
-                              TextWidget(
-                                text: 'Location: Barangay 3 Magsaysay street',
-                                fontSize: 11,
-                              ),
-                              TextWidget(
-                                align: TextAlign.start,
-                                maxLines: 2,
-                                text:
-                                    'I have to leave my apartment my cats left so looking for cat lovers.',
-                                fontSize: 10,
+                              Container(
+                                height: 75,
+                                width: 175,
+                                color: Colors.blue[200],
+                                child: Padding(
+                                  padding: const EdgeInsets.all(3.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      TextWidget(
+                                        text:
+                                            'Owner: ${data.docs[index]['name']}',
+                                        fontSize: 13,
+                                      ),
+                                      TextWidget(
+                                        text:
+                                            'Location: ${data.docs[index]['location']}',
+                                        fontSize: 11,
+                                      ),
+                                      TextWidget(
+                                        align: TextAlign.start,
+                                        maxLines: 2,
+                                        text: '${data.docs[index]['desc']}',
+                                        fontSize: 10,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                      ),
-                    ],
+                        );
+                      },
+                    ),
                   );
-                },
-              ),
-            )
+                })
           ],
         ),
       ),

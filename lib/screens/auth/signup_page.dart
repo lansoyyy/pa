@@ -22,57 +22,59 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/Ellipse 6.png',
-              height: 200,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextWidget(
-              text: 'PET PAL',
-              fontSize: 32,
-              fontFamily: 'Bold',
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextWidget(
-              text: 'Create Account',
-              fontSize: 18,
-              fontFamily: 'Medium',
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFieldWidget(
-              controller: email,
-              label: 'Email',
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFieldWidget(
-              showEye: true,
-              isObscure: true,
-              controller: password,
-              label: 'Password',
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            ButtonWidget(
-              width: 200,
-              label: 'Signup',
-              onPressed: () {
-                register(context);
-              },
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/Ellipse 6.png',
+                height: 200,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextWidget(
+                text: 'PET PAL',
+                fontSize: 32,
+                fontFamily: 'Bold',
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextWidget(
+                text: 'Create Account',
+                fontSize: 18,
+                fontFamily: 'Medium',
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextFieldWidget(
+                controller: email,
+                label: 'Email',
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextFieldWidget(
+                showEye: true,
+                isObscure: true,
+                controller: password,
+                label: 'Password',
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              ButtonWidget(
+                width: 200,
+                label: 'Signup',
+                onPressed: () {
+                  register(context);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
