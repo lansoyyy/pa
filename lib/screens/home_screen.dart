@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pa/screens/auth/login_page.dart';
+import 'package:pa/screens/pages/inquiry_page.dart';
+import 'package:pa/screens/pages/status_page.dart';
 import 'package:pa/screens/pages/upload_pet_page.dart';
 import 'package:pa/widgets/text_widget.dart';
 
@@ -35,18 +38,68 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 PopupMenuItem(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const InquiryPage()));
+                  },
                   child: TextWidget(
                     text: 'Inquiries',
                     fontSize: 16,
                   ),
                 ),
                 PopupMenuItem(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const StatusPage()));
+                  },
                   child: TextWidget(
                     text: 'Status',
                     fontSize: 16,
                   ),
                 ),
                 PopupMenuItem(
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: const Text(
+                                'Logout Confirmation',
+                                style: TextStyle(
+                                    fontFamily: 'QBold',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              content: const Text(
+                                'Are you sure you want to Logout?',
+                                style: TextStyle(fontFamily: 'QRegular'),
+                              ),
+                              actions: <Widget>[
+                                MaterialButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(true),
+                                  child: const Text(
+                                    'Close',
+                                    style: TextStyle(
+                                        fontFamily: 'QRegular',
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                MaterialButton(
+                                  onPressed: () async {
+                                    Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const LoginPage()));
+                                  },
+                                  child: const Text(
+                                    'Continue',
+                                    style: TextStyle(
+                                        fontFamily: 'QRegular',
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ));
+                  },
                   child: TextWidget(
                     text: 'Logout',
                     fontSize: 16,
