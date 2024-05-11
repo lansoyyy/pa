@@ -60,7 +60,106 @@ class _LoginPageState extends State<LoginPage> {
                   child: Align(
                     alignment: Alignment.bottomRight,
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: ((context) {
+                            final formKey = GlobalKey<FormState>();
+                            final TextEditingController emailController =
+                                TextEditingController();
+
+                            return AlertDialog(
+                              title: TextWidget(
+                                text: 'Forgot Password',
+                                fontSize: 14,
+                                color: Colors.black,
+                              ),
+                              content: Form(
+                                key: formKey,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    TextFieldWidget(
+                                      hint: 'Email',
+                                      textCapitalization:
+                                          TextCapitalization.none,
+                                      inputType: TextInputType.emailAddress,
+                                      label: 'Email',
+                                      controller: emailController,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please enter an email address';
+                                        }
+                                        final emailRegex = RegExp(
+                                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                                        if (!emailRegex.hasMatch(value)) {
+                                          return 'Please enter a valid email address';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: (() {
+                                    Navigator.pop(context);
+                                  }),
+                                  child: TextWidget(
+                                    text: 'Cancel',
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: (() async {
+                                    if (formKey.currentState!.validate()) {
+                                      try {
+                                        Navigator.pop(context);
+                                        await FirebaseAuth.instance
+                                            .sendPasswordResetEmail(
+                                                email: emailController.text);
+                                        showToast(
+                                            'Password reset link sent to ${emailController.text}');
+                                      } catch (e) {
+                                        String errorMessage = '';
+
+                                        if (e is FirebaseException) {
+                                          switch (e.code) {
+                                            case 'invalid-email':
+                                              errorMessage =
+                                                  'The email address is invalid.';
+                                              break;
+                                            case 'user-not-found':
+                                              errorMessage =
+                                                  'The user associated with the email address is not found.';
+                                              break;
+                                            default:
+                                              errorMessage =
+                                                  'An error occurred while resetting the password.';
+                                          }
+                                        } else {
+                                          errorMessage =
+                                              'An error occurred while resetting the password.';
+                                        }
+
+                                        showToast(errorMessage);
+                                        Navigator.pop(context);
+                                      }
+                                    }
+                                  }),
+                                  child: TextWidget(
+                                    text: 'Continue',
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
+                        );
+                      },
                       child: TextWidget(
                         text: 'Forgot Password?',
                         fontFamily: 'Bold',
