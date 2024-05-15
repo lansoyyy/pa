@@ -93,6 +93,7 @@ class _UploadPetPageState extends State<UploadPetPage> {
   final sex = TextEditingController();
   final status = TextEditingController();
   final location = TextEditingController();
+  final number = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -161,7 +162,6 @@ class _UploadPetPageState extends State<UploadPetPage> {
                   children: [
                     TextFieldWidget(
                       width: 150,
-                      inputType: TextInputType.number,
                       controller: age,
                       label: 'Age',
                     ),
@@ -183,7 +183,13 @@ class _UploadPetPageState extends State<UploadPetPage> {
                 TextFieldWidget(
                   width: 320,
                   controller: location,
-                  label: 'Location',
+                  label: 'Address',
+                ),
+                TextFieldWidget(
+                  width: 320,
+                  controller: number,
+                  label: 'Contact Number',
+                  inputType: TextInputType.number,
                 ),
                 TextFieldWidget(
                   width: 320,
@@ -196,7 +202,7 @@ class _UploadPetPageState extends State<UploadPetPage> {
                   label: 'Upload',
                   onPressed: () {
                     addPet(imageURL, name.text, age.text, sex.text, status.text,
-                        desc.text, location.text);
+                        desc.text, location.text, number.text);
                     showToast('Pet uploaded');
                     Navigator.pop(context);
                   },

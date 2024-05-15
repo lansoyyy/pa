@@ -9,6 +9,11 @@ Future signup(email) async {
   final json = {
     'email': email,
     'id': docUser.id,
+    'img': '',
+    'bday': '',
+    'address': '',
+    'name': '',
+    'number': '',
   };
 
   await docUser.set(json);

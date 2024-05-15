@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pa/screens/auth/login_page.dart';
 import 'package:pa/screens/pages/inquiry_page.dart';
+import 'package:pa/screens/pages/profile_page.dart';
 import 'package:pa/screens/pages/status_page.dart';
 import 'package:pa/screens/pages/upload_pet_page.dart';
 import 'package:pa/widgets/text_widget.dart';
@@ -13,18 +14,13 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        leading: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Image.asset(
-            'assets/images/Ellipse 6.png',
-          ),
-        ),
-        actions: [
-          PopupMenuButton(
-            icon: const Icon(
-              Icons.menu,
-              color: Colors.white,
+          backgroundColor: Colors.blue,
+          leading: PopupMenuButton(
+            icon: Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: Image.asset(
+                'assets/images/Ellipse 6.png',
+              ),
             ),
             itemBuilder: (context) {
               return [
@@ -55,6 +51,16 @@ class HomeScreen extends StatelessWidget {
                   },
                   child: TextWidget(
                     text: 'Status',
+                    fontSize: 16,
+                  ),
+                ),
+                PopupMenuItem(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const ProfilePage()));
+                  },
+                  child: TextWidget(
+                    text: 'Profile',
                     fontSize: 16,
                   ),
                 ),
@@ -108,9 +114,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ];
             },
-          )
-        ],
-      ),
+          )),
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -165,8 +169,8 @@ class HomeScreen extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Container(
-                                        height: 100,
-                                        width: 175,
+                                        height: 150,
+                                        width: 225,
                                         decoration: BoxDecoration(
                                           image: DecorationImage(
                                             fit: BoxFit.cover,
@@ -244,8 +248,8 @@ class HomeScreen extends StatelessWidget {
                           child: Column(
                             children: [
                               Container(
-                                height: 100,
-                                width: 175,
+                                height: 125,
+                                width: 200,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
@@ -257,7 +261,7 @@ class HomeScreen extends StatelessWidget {
                               ),
                               Container(
                                 height: 75,
-                                width: 175,
+                                width: 200,
                                 color: Colors.blue[200],
                                 child: Padding(
                                   padding: const EdgeInsets.all(3.0),

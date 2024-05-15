@@ -30,9 +30,8 @@ class _StatusPageState extends State<StatusPage> {
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('Pets')
-              .where('type', whereIn: ['Approved', 'Taken']).snapshots(),
+          stream: FirebaseFirestore.instance.collection('Pets').where('type',
+              whereIn: ['Approved', 'Taken', 'Declined']).snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
@@ -54,7 +53,7 @@ class _StatusPageState extends State<StatusPage> {
               padding: const EdgeInsets.all(10.0),
               child: SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       color: Colors.blue,
@@ -77,7 +76,7 @@ class _StatusPageState extends State<StatusPage> {
                         padding: const EdgeInsets.only(
                             left: 25, right: 25, top: 5, bottom: 5),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             TextWidget(
                               text: '${i + 1}.',
@@ -95,19 +94,29 @@ class _StatusPageState extends State<StatusPage> {
                             const SizedBox(
                               width: 10,
                             ),
-                            TextWidget(
-                                text: data.docs[i]['name'], fontSize: 14),
-                            const SizedBox(
-                              width: 70,
+                            SizedBox(
+                              width: 125,
+                              child: TextWidget(
+                                text: data.docs[i]['name'],
+                                fontSize: 14,
+                                align: TextAlign.start,
+                              ),
                             ),
-                            ButtonWidget(
-                              color: Colors.green,
-                              radius: 100,
-                              height: 45,
-                              width: 100,
-                              fontSize: 12,
-                              label: data.docs[i]['type'],
-                              onPressed: () {},
+                            const Expanded(
+                              child: SizedBox(
+                                width: 10,
+                              ),
+                            ),
+                            TextWidget(
+                              color: data.docs[i]['type'] == 'Declined' ||
+                                      data.docs[i]['type'] == 'Taken'
+                                  ? Colors.red
+                                  : Colors.green,
+                              text: data.docs[i]['type'] == 'Taken'
+                                  ? 'Pet already taken'
+                                  : data.docs[i]['type'],
+                              fontSize: 14,
+                              fontFamily: 'Bold',
                             ),
                           ],
                         ),

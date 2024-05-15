@@ -132,12 +132,12 @@ class _InquiryPageState extends State<InquiryPage> {
                               height: 35,
                               width: 50,
                               fontSize: 12,
-                              label: 'Taken',
+                              label: 'Declined',
                               onPressed: () async {
                                 await FirebaseFirestore.instance
                                     .collection('Pets')
                                     .doc(data.docs[i].id)
-                                    .update({'type': 'Taken'});
+                                    .update({'type': 'Declined'});
                               },
                             ),
                           ],
