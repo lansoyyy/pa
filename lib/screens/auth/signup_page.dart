@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pa/screens/auth/login_page.dart';
 import 'package:pa/screens/home_screen.dart';
 import 'package:pa/services/signup.dart';
@@ -73,6 +74,65 @@ class _SignupPageState extends State<SignupPage> {
                   register(context);
                 },
               ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    width: 150,
+                    child: Divider(),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  TextWidget(
+                    text: 'or',
+                    fontSize: 14,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  const SizedBox(
+                    width: 150,
+                    child: Divider(),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              MaterialButton(
+                color: Colors.white,
+                onPressed: () {
+                  googleLogin();
+                },
+                child: SizedBox(
+                  width: 200,
+                  height: 45,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/images/googlelogo.png',
+                        height: 25,
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      TextWidget(
+                        text: 'Continue with Google',
+                        fontSize: 14,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
             ],
           ),
         ),
@@ -102,6 +162,19 @@ class _SignupPageState extends State<SignupPage> {
       }
     } on Exception catch (e) {
       showToast("An error occurred: $e");
+    }
+  }
+
+  googleLogin() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
+
+    try {
+      final googleSignInAccount = await googleSignIn.signIn();
+      signup(googleSignInAccount!.email);
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const HomeScreen()));
+    } on FirebaseAuthException catch (e) {
+      showToast(e);
     }
   }
 }

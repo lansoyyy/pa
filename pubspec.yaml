@@ -42,6 +42,7 @@ dependencies:
   firebase_storage:
   firebase_auth:
   image_picker:
+  google_sign_in:
 
 dev_dependencies:
   flutter_test:
