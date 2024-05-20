@@ -15,6 +15,7 @@ Future addPet(img, name, age, sex, status, desc, location, number) async {
     'id': docUser.id,
     'location': location,
     'number': number,
+    'uid': FirebaseAuth.instance.currentUser!.uid,
   };
 
   await docUser.set(json);

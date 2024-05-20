@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pa/widgets/button_widget.dart';
 import 'package:pa/widgets/text_widget.dart';
@@ -33,6 +34,7 @@ class _InquiryPageState extends State<InquiryPage> {
           stream: FirebaseFirestore.instance
               .collection('Pets')
               .where('type', isEqualTo: 'Inquired')
+              .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
               .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -101,8 +103,11 @@ class _InquiryPageState extends State<InquiryPage> {
                             const SizedBox(
                               width: 10,
                             ),
-                            TextWidget(
-                                text: data.docs[i]['name'], fontSize: 14),
+                            SizedBox(
+                              width: 100,
+                              child: TextWidget(
+                                  text: data.docs[i]['name'], fontSize: 12),
+                            ),
                             const Expanded(
                               child: SizedBox(
                                 width: 10,
@@ -124,7 +129,7 @@ class _InquiryPageState extends State<InquiryPage> {
                               },
                             ),
                             const SizedBox(
-                              width: 10,
+                              width: 5,
                             ),
                             ButtonWidget(
                               color: Colors.red,
