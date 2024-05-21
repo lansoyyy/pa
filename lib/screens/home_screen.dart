@@ -113,7 +113,8 @@ class _HomeScreenState extends State<HomeScreen> {
               return [
                 PopupMenuItem(
                     onTap: () {
-                      uploadPicture('gallery');
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const ProfilePage()));
                     },
                     child: StreamBuilder<DocumentSnapshot>(
                         stream: userData,
