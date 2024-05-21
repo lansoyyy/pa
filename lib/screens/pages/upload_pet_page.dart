@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pa/services/add_pet.dart';
 import 'package:pa/widgets/button_widget.dart';
@@ -11,13 +12,36 @@ import 'package:flutter/foundation.dart';
 import 'dart:io';
 
 class UploadPetPage extends StatefulWidget {
-  const UploadPetPage({super.key});
+  bool? inEdit;
+  Map? data;
+
+  UploadPetPage({
+    super.key,
+    this.inEdit = false,
+    this.data = const {},
+  });
 
   @override
   State<UploadPetPage> createState() => _UploadPetPageState();
 }
 
 class _UploadPetPageState extends State<UploadPetPage> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.inEdit!) {
+      setState(() {
+        name.text = widget.data!['name'];
+        age.text = widget.data!['age'];
+        sex.text = widget.data!['sex'];
+        location.text = widget.data!['location'];
+        status.text = widget.data!['status'];
+        number.text = widget.data!['number'];
+        desc.text = widget.data!['desc'];
+      });
+    }
+  }
+
   late String fileName = '';
 
   late File imageFile;
@@ -125,11 +149,19 @@ class _UploadPetPageState extends State<UploadPetPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 imageURL == ''
-                    ? Container(
-                        width: 300,
-                        height: 175,
-                        color: Colors.grey,
-                      )
+                    ? widget.inEdit!
+                        ? Container(
+                            width: 300,
+                            height: 175,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: NetworkImage(widget.data!['img']))),
+                          )
+                        : Container(
+                            width: 300,
+                            height: 175,
+                            color: Colors.grey,
+                          )
                     : Container(
                         width: 300,
                         height: 175,
@@ -142,16 +174,20 @@ class _UploadPetPageState extends State<UploadPetPage> {
                           ),
                         ),
                       ),
-                TextButton(
-                  onPressed: () {
-                    uploadPicture('gallery');
-                  },
-                  child: TextWidget(
-                    text: 'Upload image',
-                    fontSize: 14,
-                    fontFamily: 'Bold',
-                  ),
-                ),
+                widget.inEdit!
+                    ? const SizedBox(
+                        height: 10,
+                      )
+                    : TextButton(
+                        onPressed: () {
+                          uploadPicture('gallery');
+                        },
+                        child: TextWidget(
+                          text: 'Upload image',
+                          fontSize: 14,
+                          fontFamily: 'Bold',
+                        ),
+                      ),
                 TextFieldWidget(
                   width: 320,
                   controller: name,
@@ -199,12 +235,29 @@ class _UploadPetPageState extends State<UploadPetPage> {
                   label: 'Description',
                 ),
                 ButtonWidget(
-                  label: 'Upload',
-                  onPressed: () {
-                    addPet(imageURL, name.text, age.text, sex.text, status.text,
-                        desc.text, location.text, number.text);
-                    showToast('Pet uploaded');
-                    Navigator.pop(context);
+                  label: widget.inEdit! ? 'Edit' : 'Upload',
+                  onPressed: () async {
+                    if (widget.inEdit!) {
+                      await FirebaseFirestore.instance
+                          .collection('Pets')
+                          .doc(widget.data!['id'])
+                          .update({
+                        'name': name.text,
+                        'age': age.text,
+                        'number': number.text,
+                        'location': location.text,
+                        'sex': sex.text,
+                        'status': status.text,
+                        'desc': desc.text,
+                      });
+                      showToast('Pet edited');
+                      Navigator.pop(context);
+                    } else {
+                      addPet(imageURL, name.text, age.text, sex.text,
+                          status.text, desc.text, location.text, number.text);
+                      showToast('Pet uploaded');
+                      Navigator.pop(context);
+                    }
                   },
                 ),
                 const SizedBox(
